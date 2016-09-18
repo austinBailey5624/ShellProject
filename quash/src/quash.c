@@ -34,19 +34,27 @@ static QuashState initial_state() {
   };
 }
 
+
 static void print_prompt() {
   bool should_free = true;
-  char* cwd = get_current_directory(&should_free);
+  volatile char* cwd = get_current_directory(&should_free);
+
   int last_dir_idx = 0;
 
   assert(cwd != NULL);
-
-  for (int i = 0; cwd[i] != '\0'; ++i) {
-    if (cwd[i] == '/' && cwd[i] != '\0') {
+  //printf("cwd= ");
+//  printf(cwd + 0);
+  //fflush(stdout);
+  for (int i = 0; cwd[i] != '\0'; ++i)
+  {
+    if (cwd[i] == '/' && cwd[i] != '\0')
+    {
       last_dir_idx = i + 1;
     }
   }
-
+//  printf("Got to 54");
+  //fflush(stdout);
+  //printf((char*)cwd[last_dir_idx]);
   printf("[QUASH - %s@%s %s]$ ",
           lookup_env("USER"),
           lookup_env("HOSTNAME"),

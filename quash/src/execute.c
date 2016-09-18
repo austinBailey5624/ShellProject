@@ -4,13 +4,13 @@
  * @brief Implements interface functions between Quash and the environment and
  * functions that interpret an execute commands.
  *
- * @note As you add things to this file you may want to change the method signature 
+ * @note As you add things to this file you may want to change the method signature
  */
 
 #include "execute.h"
 
 #include <stdio.h>
-
+#include <stdlib.h>
 #include "quash.h"
 
 // Remove this and all expansion calls to it
@@ -28,12 +28,30 @@
 char* get_current_directory(bool* should_free) {
   // TODO: Get the current working directory. This will fix the prompt path.
   // HINT: This should be pretty simple
-  IMPLEMENT_ME();
-
-  // Change this to true if necessary
   *should_free = false;
+  //printf("function called");
+  char buf[1024];//= new char[1024];
+  if (getcwd(buf, 1024) != NULL)
+  {
+    //printf(buf);
+    //printf("\n");
+    char* buf2=buf;
+    //printf(buf2);
+    //printf("\n");
+    //printf("got to 38");
+    fflush(stdout);
+    return buf2;
 
-  return "**CWD GOES HERE**";
+  }
+  else
+  { //printf("cwd was null");
+    //fflush(stdout);
+    return "Didnt work";
+  }
+  // Change this to true if necessary
+
+  //char* dir_path=get_current_dir_name();
+  //return buf;
 }
 
 // Returns the value of an environment variable env_var
@@ -42,12 +60,12 @@ const char* lookup_env(const char* env_var) {
   // to interpret variables from the command line and display the prompt
   // correctly
   // HINT: This should be pretty simple
-  IMPLEMENT_ME();
+  //IMPLEMENT_ME();
 
   // TODO: Remove warning silencers
-  (void) env_var; // Silence unused variable warning
+   // Silence unused variable warning
 
-  return "???";
+  return getenv(env_var);
 }
 
 // Sets the environment variable env_var to the value val
@@ -161,9 +179,17 @@ void run_kill(KillCommand cmd) {
 // Prints the current working directory to stdout
 void run_pwd() {
   // TODO: Print the current working directory
-  IMPLEMENT_ME();
-
-
+//  IMPLEMENT_ME();
+  char dir_name[1024];
+  if ( getcwd(dir_name, sizeof(dir_name)) !=NULL)
+  {
+    printf(dir_name);
+  }
+  else
+  {
+    perror("getcwd() error");
+  }
+  printf(dir_name);
   // Flush the buffer before returning
   fflush(stdout);
 }
