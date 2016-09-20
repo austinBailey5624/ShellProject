@@ -157,6 +157,10 @@ void run_export(ExportCommand cmd) {
 void run_cd(CDCommand cmd) {
   // TODO: Change directory
   // TODO: Update PWD and optionally update OLD_PWD
+  //OLDPWD=PWD;
+  //PWD=cmd.dir;
+  //PWD=cmd.txt?
+
   IMPLEMENT_ME();
 
   (void) cmd; // Silence unused variable warning
@@ -284,12 +288,13 @@ void create_process(CommandHolder holder) {
 
   // TODO: Setup pipes and redirects
   int fd[2];
-  //pid_t pid;
+  pid_t pid;
   pipe(fd);
   fork();
   if(pid==0)
   {
-    dup2(fd[0],p_in);
+        example_run_command(holder.cmd);
+        dup2(fd[0],p_in);
     close(fd[1]);
   }
 
@@ -319,12 +324,12 @@ void run_script(CommandHolder* holders) {
   if (!(holders[0].flags & BACKGROUND)) {
     // Not a background Job
     // TODO: Wait for all processes under the job to complete
-    IMPLEMENT_ME();
+ //   IMPLEMENT_ME();
   }
   else {
     // A background job.
     // TODO: Push the new job to the job queue
-    IMPLEMENT_ME();
+  //  IMPLEMENT_ME();
 
     // TODO: Once jobs are implemented, uncomment and fill the following line
     // print_job_bg_start(job_id, pid, cmd);
