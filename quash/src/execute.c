@@ -283,7 +283,18 @@ void create_process(CommandHolder holder) {
   (void) r_app; // Silence unused variable warning
 
   // TODO: Setup pipes and redirects
-  IMPLEMENT_ME();
+  int fd[2];
+  pid_t pid;
+  pipe(fd);
+  fork();
+  if(pid==0)
+  {
+    dup2(fd[0],p_in);
+    close(fd[1]);
+  }
+
+
+//  IMPLEMENT_ME();
 }
 
 // Run a list of commands

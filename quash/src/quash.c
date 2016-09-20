@@ -9,8 +9,10 @@
  **************************************************************************/
 #include "quash.h"
 
+#include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdio.h>
 #include <unistd.h>
 
 #include "command.h"
@@ -55,7 +57,7 @@ static void print_prompt() {
 //  printf("Got to 54");
   //fflush(stdout);
   //printf((char*)cwd[last_dir_idx]);
-  printf("[QUASH - %s@%s %s]$ ",
+  fprintf(stdout,"[QUASH - %s@%s %s]$ ",
           lookup_env("USER"),
           lookup_env("HOSTNAME"),
           cwd + last_dir_idx);
