@@ -284,7 +284,7 @@ void create_process(CommandHolder holder) {
 
   // TODO: Setup pipes and redirects
   int fd[2];
-  pid_t pid;
+  //pid_t pid;
   pipe(fd);
   fork();
   if(pid==0)
