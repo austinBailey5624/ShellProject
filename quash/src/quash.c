@@ -39,7 +39,7 @@ static QuashState initial_state() {
 
 static void print_prompt() {
   bool should_free = true;
-  volatile char* cwd = get_current_directory(&should_free);
+  char* cwd = get_current_directory(&should_free);
 
   int last_dir_idx = 0;
 

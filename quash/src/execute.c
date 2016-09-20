@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "quash.h"
 
 // Remove this and all expansion calls to it
@@ -74,15 +75,16 @@ void write_env(const char* env_var, const char* val) {
   // HINT: This should be pretty simple
   IMPLEMENT_ME();
 
+  setenv(env_var, val, 1);
   // TODO: Remove warning silencers
-  (void) env_var; // Silence unused variable warning
-  (void) val;     // Silence unused variable warning
+  //(void) env_var; // Silence unused variable warning
+  //(void) val;     // Silence unused variable warning
 }
 
 // Check the status of background jobs
 void check_jobs_bg_status() {
   // TODO: Check on the statuses of all of the background jobs
-  IMPLEMENT_ME();
+  //IMPLEMENT_ME();
 
   // TODO: Once jobs are implemented, uncomment and fill the following line
   // print_job_bg_complete(job_id, pid, cmd);
@@ -117,12 +119,16 @@ void run_generic(GenericCommand cmd) {
   // character pointer is always NULL) list of strings. The first element in the
   // array is the executable
   char** str = cmd.args;
+  if (strcmp(str[0], "ls") == 0)
+  {
+    puts(str[0]);
+  }
 
   // TODO: Remove warning silencers
-  (void) str; // Silence unused variable warning
+  //(void) str; // Silence unused variable warning
 
   // TODO: Implement run generic
-  IMPLEMENT_ME();
+  //IMPLEMENT_ME();
 }
 
 // Print strings
@@ -133,9 +139,16 @@ void run_echo(EchoCommand cmd) {
 
   // TODO: Remove warning silencers
   (void) str; // Silence unused variable warning
+  //printf(str[0]);
+  for (int i=0; str[i] != NULL; i++)
+  {
+    printf(str[i]);
+    printf(" ");
+  }
+    printf("\n");
 
   // TODO: Implement echo
-  IMPLEMENT_ME();
+  //IMPLEMENT_ME();
 }
 
 // Sets an environment variable
@@ -187,13 +200,13 @@ void run_pwd() {
   char dir_name[1024];
   if ( getcwd(dir_name, sizeof(dir_name)) !=NULL)
   {
-    printf(dir_name);
+    puts(dir_name);
   }
   else
   {
     perror("getcwd() error");
   }
-  printf(dir_name);
+  //printf(dir_name);
   // Flush the buffer before returning
   fflush(stdout);
 }
@@ -289,15 +302,17 @@ void create_process(CommandHolder holder) {
   // TODO: Setup pipes and redirects
   int fd[2];
   pid_t pid;
-  pipe(fd);
-  fork();
+  if (pipe(fd) == -1)
+  {
+    perror("Error creating pipe -> execute.c:294");
+  }
+  pid=fork();
   if(pid==0)
   {
         example_run_command(holder.cmd);
         dup2(fd[0],p_in);
-    close(fd[1]);
+        close(fd[1]);
   }
-
 
 //  IMPLEMENT_ME();
 }
