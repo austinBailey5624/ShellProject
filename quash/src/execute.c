@@ -33,29 +33,17 @@ char* get_current_directory(bool* should_free) {
   // TODO: Get the current working directory. This will fix the prompt path.
   // HINT: This should be pretty simple
   *should_free = false;
-  //printf("function called");
-  char buf[1024];//= new char[1024];
+
+  char buf[1024];
   if (getcwd(buf, 1024) != NULL)
   {
-    //printf(buf);
-    //printf("\n");
     char* buf2=buf;
-    //printf(buf2);
-    //printf("\n");
-    //printf("got to 38");
-    fflush(stdout);
     return buf2;
-
   }
   else
-  { //printf("cwd was null");
-    //fflush(stdout);
+  {
     return "Didnt work";
   }
-  // Change this to true if necessary
-
-  //char* dir_path=get_current_dir_name();
-  //return buf;
 }
 
 // Returns the value of an environment variable env_var
@@ -76,13 +64,7 @@ const char* lookup_env(const char* env_var) {
 void write_env(const char* env_var, const char* val) {
   // TODO: Write environment variables
   // HINT: This should be pretty simple
-// printf(getenv(env_var));//solution?
-  IMPLEMENT_ME();
-
   setenv(env_var, val, 1);
-  // TODO: Remove warning silencers
-  //(void) env_var; // Silence unused variable warning
-  //(void) val;     // Silence unused variable warning
 }
 
 // Check the status of background jobs
@@ -139,6 +121,7 @@ void run_generic(GenericCommand cmd) {
   char** str = cmd.args;
   if (strcmp(str[0], "ls") == 0)
   {
+      puts("");
       DIR           *d;
       struct dirent *dir;
       d = opendir(".");
@@ -154,7 +137,6 @@ void run_generic(GenericCommand cmd) {
       closedir(d);
       }
   }
-
   /*
   for(int i=0;i<sizeof(str);i++)
   {
@@ -173,19 +155,12 @@ void run_echo(EchoCommand cmd) {
   // Print an array of strings. The args array is a NULL terminated (last
   // character pointer is always NULL) list of strings.
   char** str = cmd.args;
-
-  // TODO: Remove warning silencers
-  (void) str; // Silence unused variable warning
-  //printf(str[0]);
   for (int i=0; str[i] != NULL; i++)
   {
     printf(str[i]);
     printf(" ");
   }
     printf("\n");
-
-  // TODO: Implement echo
-  //IMPLEMENT_ME();
 }
 
 // Sets an environment variable
@@ -243,10 +218,6 @@ void run_pwd() {
   {
     perror("getcwd() error");
   }
-  //printf(dir_name);
-
- // printf(dir_name);
-  // Flush the buffer before returning
   fflush(stdout);
 }
 
@@ -341,11 +312,12 @@ void create_process(CommandHolder holder) {
   // TODO: Setup pipes and redirects
   int fd[2];
   pid_t pid;
+
   if (pipe(fd) == -1)
   {
     perror("Error creating pipe -> execute.c:294");
   }
-  pipe(fd);
+
   pid=fork();
   if(pid==0)
   {
@@ -353,8 +325,6 @@ void create_process(CommandHolder holder) {
         example_run_command(holder.cmd);
         dup2(fd[0],p_in);
         close(fd[1]);
-
-
       //  killCommand(pid);
   }
 
