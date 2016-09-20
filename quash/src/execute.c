@@ -15,6 +15,7 @@
 #include <sys/types.h>//for cd to work
 #include <signal.h>//for cd to work
 #include "quash.h"
+#include <dirent.h>
 
 // Remove this and all expansion calls to it
 /**
@@ -101,7 +102,7 @@ void check_jobs_bg_status() {
 //             print_job(i,i,)
 //       }
 // }
-  IMPLEMENT_ME();
+  //IMPLEMENT_ME();
 
   // TODO: Once jobs are implemented, uncomment and fill the following line
   // print_job_bg_complete(job_id, pid, cmd);
@@ -138,20 +139,32 @@ void run_generic(GenericCommand cmd) {
   char** str = cmd.args;
   if (strcmp(str[0], "ls") == 0)
   {
-    puts(str[0]);
+      DIR           *d;
+      struct dirent *dir;
+      d = opendir(".");
+      if (d)
+      {
+      while ((dir = readdir(d)) != NULL)
+      {
+        if (dir->d_type == DT_REG)
+        {
+          printf("%s\n", dir->d_name);
+        }
+      }
+      closedir(d);
+      }
   }
+
+  /*
   for(int i=0;i<sizeof(str);i++)
   {
         printf(str[i]);
   }
+  */
   // TODO: Remove warning silencers
   //(void) str; // Silence unused variable warning
 
   // TODO: Implement run generic
-
-  //IMPLEMENT_ME();
-
-  //run_cd(cmd);
  // IMPLEMENT_ME();
 }
 
@@ -336,7 +349,7 @@ void create_process(CommandHolder holder) {
   pid=fork();
   if(pid==0)
   {
-        push_front_Example(pid);
+      //  push_front_Example(pid);
         example_run_command(holder.cmd);
         dup2(fd[0],p_in);
         close(fd[1]);
