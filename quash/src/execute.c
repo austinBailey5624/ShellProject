@@ -8,10 +8,12 @@
  */
 
 #include "execute.h"
-
+#include <command.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>//for cd to work
+#include <signal.h>//for cd to work
 #include "quash.h"
 
 // Remove this and all expansion calls to it
@@ -73,6 +75,7 @@ const char* lookup_env(const char* env_var) {
 void write_env(const char* env_var, const char* val) {
   // TODO: Write environment variables
   // HINT: This should be pretty simple
+// printf(getenv(env_var));//solution?
   IMPLEMENT_ME();
 
   setenv(env_var, val, 1);
@@ -84,7 +87,21 @@ void write_env(const char* env_var, const char* val) {
 // Check the status of background jobs
 void check_jobs_bg_status() {
   // TODO: Check on the statuses of all of the background jobs
+
   //IMPLEMENT_ME();
+
+// if(length_Example()==0)
+// {
+//       printf("There are no Background jobs to print");
+// }
+// else
+// {
+//       for(int i=0;i<length_Example();i++)
+//       {
+//             print_job(i,i,)
+//       }
+// }
+  IMPLEMENT_ME();
 
   // TODO: Once jobs are implemented, uncomment and fill the following line
   // print_job_bg_complete(job_id, pid, cmd);
@@ -123,12 +140,19 @@ void run_generic(GenericCommand cmd) {
   {
     puts(str[0]);
   }
-
+  for(int i=0;i<sizeof(str);i++)
+  {
+        printf(str[i]);
+  }
   // TODO: Remove warning silencers
   //(void) str; // Silence unused variable warning
 
   // TODO: Implement run generic
+
   //IMPLEMENT_ME();
+
+  //run_cd(cmd);
+ // IMPLEMENT_ME();
 }
 
 // Print strings
@@ -172,9 +196,9 @@ void run_cd(CDCommand cmd) {
   // TODO: Update PWD and optionally update OLD_PWD
   //OLDPWD=PWD;
   //PWD=cmd.dir;
-  //PWD=cmd.txt?
+  chdir(cmd.dir);
 
-  IMPLEMENT_ME();
+  //IMPLEMENT_ME();
 
   (void) cmd; // Silence unused variable warning
 }
@@ -207,6 +231,8 @@ void run_pwd() {
     perror("getcwd() error");
   }
   //printf(dir_name);
+
+ // printf(dir_name);
   // Flush the buffer before returning
   fflush(stdout);
 }
@@ -306,12 +332,17 @@ void create_process(CommandHolder holder) {
   {
     perror("Error creating pipe -> execute.c:294");
   }
+  pipe(fd);
   pid=fork();
   if(pid==0)
   {
+        push_front_Example(pid);
         example_run_command(holder.cmd);
         dup2(fd[0],p_in);
         close(fd[1]);
+
+
+      //  killCommand(pid);
   }
 
 //  IMPLEMENT_ME();

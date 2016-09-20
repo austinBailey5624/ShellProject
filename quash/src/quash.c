@@ -101,7 +101,7 @@ void end_main_loop() {
  */
 int main(int argc, char** argv) {
   state = initial_state();
-
+  //IMPLEMENT_DEQUE_STRUCT();//maybe this goes here?
   if (is_tty()) {
     puts("Welcome to Quash!");
     puts("Type \"exit\" or \"quit\" to quit");
