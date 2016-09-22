@@ -189,8 +189,7 @@ void run_export(ExportCommand cmd) {
 void run_cd(CDCommand cmd) {
   // TODO: Change directory
   // TODO: Update PWD and optionally update OLD_PWD
-  //OLDPWD=PWD;
-  //PWD=cmd.dir;
+
   chdir(cmd.dir);
 
   //IMPLEMENT_ME();
