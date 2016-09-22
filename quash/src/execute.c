@@ -121,30 +121,37 @@ void run_generic(GenericCommand cmd) {
   char** str = cmd.args;
   if (strcmp(str[0], "ls") == 0)
   {
-      puts("");
-      DIR           *d;
-      struct dirent *dir;
-      d = opendir(".");
-      if (d)
+      if (str[1] == NULL)
       {
-      while ((dir = readdir(d)) != NULL)
-      {
-        if (dir->d_type == DT_REG)
+        struct dirent *de;
+        DIR *dr = opendir(".");
+        while((de = readdir(dr)) != NULL)
         {
-          printf("%s\n", dir->d_name);
+          //if(strcmp(de->d_name, ".") != 0 && strcmp(de->d_name, "..") != 0)
+          if(!((de->d_name[0]=='.')||((de->d_name[0]=='.'&&de->d_name[1]=='.'))))
+          {
+            printf("%s\n", de->d_name);
+          }
         }
+        closedir(dr);
       }
-      closedir(d);
+      else if (str[1] != NULL && strcmp(str[1], "-a") == 0)
+      {
+        struct dirent *de;
+        DIR *dr = opendir(".");
+        while((de = readdir(dr)) != NULL)
+        {
+          printf("%s\n", de->d_name);
+        }
+        closedir(dr);
       }
   }
-  /*
-  for(int i=0;i<sizeof(str);i++)
+  //TODO: implement with system calsl
+  else if (strcmp(str[0], "/usr/bin/uname") == 0)
   {
-        printf(str[i]);
+    puts("Linux");
   }
-  */
-  // TODO: Remove warning silencers
-  //(void) str; // Silence unused variable warning
+
 
   // TODO: Implement run generic
  // IMPLEMENT_ME();
