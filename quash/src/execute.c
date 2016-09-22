@@ -22,7 +22,7 @@
  * @brief Note calls to any function that requires implementation
  */
 #define IMPLEMENT_ME()                                                  \
-  printf("IMPLEMENT ME: %s(line %d): %s()\n", __FILE__, __LINE__, __FUNCTION__)
+  fprintf(stderr, "IMPLEMENT ME: %s(line %d): %s()\n", __FILE__, __LINE__, __FUNCTION__)
 
 /***************************************************************************
  * Interface Functions
@@ -119,42 +119,7 @@ void run_generic(GenericCommand cmd) {
   // character pointer is always NULL) list of strings. The first element in the
   // array is the executable
   char** str = cmd.args;
-  if (strcmp(str[0], "ls") == 0)
-  {
-      if (str[1] == NULL)
-      {
-        struct dirent *de;
-        DIR *dr = opendir(".");
-        while((de = readdir(dr)) != NULL)
-        {
-          //if(strcmp(de->d_name, ".") != 0 && strcmp(de->d_name, "..") != 0)
-          if(!((de->d_name[0]=='.')||((de->d_name[0]=='.'&&de->d_name[1]=='.'))))
-          {
-            printf("%s\n", de->d_name);
-          }
-        }
-        closedir(dr);
-      }
-      else if (str[1] != NULL && strcmp(str[1], "-a") == 0)
-      {
-        struct dirent *de;
-        DIR *dr = opendir(".");
-        while((de = readdir(dr)) != NULL)
-        {
-          printf("%s\n", de->d_name);
-        }
-        closedir(dr);
-      }
-  }
-  //TODO: implement with system calsl
-  else if (strcmp(str[0], "/usr/bin/uname") == 0)
-  {
-    puts("Linux");
-  }
-
-
-  // TODO: Implement run generic
- // IMPLEMENT_ME();
+  execvp(str[0], str);
 }
 
 // Print strings
@@ -182,15 +147,20 @@ void run_export(ExportCommand cmd) {
 
   // TODO: Implement export.
   // HINT: This should be quite simple.
-  IMPLEMENT_ME();
+  setenv(env_var, val, 1);
+  //IMPLEMENT_ME();
 }
 
 // Changes the current working directory
 void run_cd(CDCommand cmd) {
   // TODO: Change directory
   // TODO: Update PWD and optionally update OLD_PWD
-
   chdir(cmd.dir);
+  char buf[1024];
+  getcwd(buf, sizeof(buf));
+  write_env("PWD", buf);
+  //free(buf);
+
 
   //IMPLEMENT_ME();
 
@@ -248,7 +218,7 @@ void run_jobs() {
  *
  * @sa Command
  */
-void example_run_command(Command cmd) {
+void example_run_parent_command(Command cmd) {
   CommandType type = get_command_type(cmd);
 
   switch (type) {
@@ -289,6 +259,46 @@ void example_run_command(Command cmd) {
   }
 }
 
+void example_run_child_command(Command cmd) {
+  CommandType type = get_command_type(cmd);
+
+  switch (type) {
+  case GENERIC:
+    run_generic(cmd.generic);
+    break;
+
+  case ECHO:
+    run_echo(cmd.echo);
+    break;
+
+  case EXPORT:
+    run_export(cmd.export);
+    break;
+
+  case CD:
+    run_cd(cmd.cd);
+    break;
+
+  case KILL:
+    run_kill(cmd.kill);
+    break;
+
+  case PWD:
+    run_pwd();
+    break;
+
+  case JOBS:
+    run_jobs();
+    break;
+
+  case EXIT:
+  case EOC:
+    break;
+
+  default:
+    fprintf(stderr, "Unknown command type: %d\n", type);
+  }
+}
 /**
  * @brief Create a process centered around the @a Command in the @a
  * CommandHolder setting up redirects and pipes where needed
@@ -317,20 +327,21 @@ void create_process(CommandHolder holder) {
 
   // TODO: Setup pipes and redirects
   int fd[2];
-  pid_t pid;
+//  pid_t pid;
 
   if (pipe(fd) == -1)
   {
     perror("Error creating pipe -> execute.c:294");
   }
 
-  pid=fork();
-  if(pid==0)
+  //TODO: Check if command should be run as a child or parent process
+        example_run_parent_command(holder.cmd);
+  //pid=fork();
+  //if(pid==0)
   {
       //  push_front_Example(pid);
-        example_run_command(holder.cmd);
-        dup2(fd[0],p_in);
-        close(fd[1]);
+        //dup2(fd[0],p_in);
+        //close(fd[1]);
       //  killCommand(pid);
   }
 
