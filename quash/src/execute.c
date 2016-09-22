@@ -11,9 +11,11 @@
 #include <command.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>//for cd to work
 #include <signal.h>//for cd to work
 #include "quash.h"
+#include <dirent.h>
 
 // Remove this and all expansion calls to it
 /**
@@ -31,29 +33,17 @@ char* get_current_directory(bool* should_free) {
   // TODO: Get the current working directory. This will fix the prompt path.
   // HINT: This should be pretty simple
   *should_free = false;
-  //printf("function called");
-  char buf[1024];//= new char[1024];
+
+  char buf[1024];
   if (getcwd(buf, 1024) != NULL)
   {
-    //printf(buf);
-    //printf("\n");
     char* buf2=buf;
-    //printf(buf2);
-    //printf("\n");
-    //printf("got to 38");
-    fflush(stdout);
     return buf2;
-
   }
   else
-  { //printf("cwd was null");
-    //fflush(stdout);
+  {
     return "Didnt work";
   }
-  // Change this to true if necessary
-
-  //char* dir_path=get_current_dir_name();
-  //return buf;
 }
 
 // Returns the value of an environment variable env_var
@@ -74,17 +64,15 @@ const char* lookup_env(const char* env_var) {
 void write_env(const char* env_var, const char* val) {
   // TODO: Write environment variables
   // HINT: This should be pretty simple
-// printf(getenv(env_var));//solution?
-  IMPLEMENT_ME();
-
-  // TODO: Remove warning silencers
-  (void) env_var; // Silence unused variable warning
-  (void) val;     // Silence unused variable warning
+  setenv(env_var, val, 1);
 }
 
 // Check the status of background jobs
 void check_jobs_bg_status() {
   // TODO: Check on the statuses of all of the background jobs
+
+  //IMPLEMENT_ME();
+
 // if(length_Example()==0)
 // {
 //       printf("There are no Background jobs to print");
@@ -96,7 +84,7 @@ void check_jobs_bg_status() {
 //             print_job(i,i,)
 //       }
 // }
-  IMPLEMENT_ME();
+  //IMPLEMENT_ME();
 
   // TODO: Once jobs are implemented, uncomment and fill the following line
   // print_job_bg_complete(job_id, pid, cmd);
@@ -131,15 +119,34 @@ void run_generic(GenericCommand cmd) {
   // character pointer is always NULL) list of strings. The first element in the
   // array is the executable
   char** str = cmd.args;
+  if (strcmp(str[0], "ls") == 0)
+  {
+      puts("");
+      DIR           *d;
+      struct dirent *dir;
+      d = opendir(".");
+      if (d)
+      {
+      while ((dir = readdir(d)) != NULL)
+      {
+        if (dir->d_type == DT_REG)
+        {
+          printf("%s\n", dir->d_name);
+        }
+      }
+      closedir(d);
+      }
+  }
+  /*
   for(int i=0;i<sizeof(str);i++)
   {
         printf(str[i]);
- }
+  }
+  */
   // TODO: Remove warning silencers
-  (void) str; // Silence unused variable warning
+  //(void) str; // Silence unused variable warning
 
   // TODO: Implement run generic
-  //run_cd(cmd);
  // IMPLEMENT_ME();
 }
 
@@ -148,12 +155,12 @@ void run_echo(EchoCommand cmd) {
   // Print an array of strings. The args array is a NULL terminated (last
   // character pointer is always NULL) list of strings.
   char** str = cmd.args;
-
-  // TODO: Remove warning silencers
-  (void) str; // Silence unused variable warning
-
-  // TODO: Implement echo
-  IMPLEMENT_ME();
+  for (int i=0; str[i] != NULL; i++)
+  {
+    printf(str[i]);
+    printf(" ");
+  }
+    printf("\n");
 }
 
 // Sets an environment variable
@@ -210,8 +217,6 @@ void run_pwd() {
   {
     perror("getcwd() error");
   }
- // printf(dir_name);
-  // Flush the buffer before returning
   fflush(stdout);
 }
 
@@ -306,17 +311,21 @@ void create_process(CommandHolder holder) {
   // TODO: Setup pipes and redirects
   int fd[2];
   pid_t pid;
-  pipe(fd);
+
+  if (pipe(fd) == -1)
+  {
+    perror("Error creating pipe -> execute.c:294");
+  }
+
   pid=fork();
   if(pid==0)
   {
-        push_front_Example(pid);
+      //  push_front_Example(pid);
         example_run_command(holder.cmd);
         dup2(fd[0],p_in);
         close(fd[1]);
       //  killCommand(pid);
   }
-
 
 //  IMPLEMENT_ME();
 }

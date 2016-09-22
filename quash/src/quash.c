@@ -39,7 +39,7 @@ static QuashState initial_state() {
 
 static void print_prompt() {
   bool should_free = true;
-  volatile char* cwd = get_current_directory(&should_free);
+  char* cwd = get_current_directory(&should_free);
 
   int last_dir_idx = 0;
 
@@ -101,7 +101,7 @@ void end_main_loop() {
  */
 int main(int argc, char** argv) {
   state = initial_state();
-  IMPLEMENT_DEQUE_STRUCT();//maybe this goes here?
+  //IMPLEMENT_DEQUE_STRUCT();//maybe this goes here?
   if (is_tty()) {
     puts("Welcome to Quash!");
     puts("Type \"exit\" or \"quit\" to quit");
