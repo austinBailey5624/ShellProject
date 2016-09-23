@@ -159,12 +159,10 @@ void run_cd(CDCommand cmd) {
   char buf[1024];
   getcwd(buf, sizeof(buf));
   write_env("PWD", buf);
-  //free(buf);
-
-
-  //IMPLEMENT_ME();
-
-  (void) cmd; // Silence unused variable warning
+//  for (int i=0; &buf[i] != NULL; ++i)
+  //{
+//    //free(buf[i]);
+//  }
 }
 
 // Sends a signal to all processes contained in a job
