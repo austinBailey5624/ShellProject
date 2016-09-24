@@ -53,23 +53,28 @@ int yyerrstatus = 0;
 %type <holder> cmd_top
 %type <cmd> cmd_content
 %type <cmd_strs> cmd cmd_arguments
-%type <cmd_list> cmds top
-%type <cmd_arr> top_extract
+%type <cmd_list> cmds
+%type <cmd_arr> top
 
 /* Start symbol */
-%start top_extract
+%start top
 
 %%
 
-top_extract: top EOC_TOK {
-push_back_Cmds(&$1, mk_command_holder(NULL, NULL, 0, mk_eoc()));
+top:    EOC_TOK {
+  *__ret_cmds = NULL;
+
+  YYACCEPT;
+}
+|       cmds EOC_TOK {
+  push_back_Cmds(&$1, mk_command_holder(NULL, NULL, 0, mk_eoc()));
 
   *__ret_cmds = as_array_Cmds(&$1, NULL);
 
   YYACCEPT;
 }
-|       top END {
-push_back_Cmds(&$1, mk_command_holder(NULL, NULL, 0, mk_eoc()));
+|       cmds END {
+  push_back_Cmds(&$1, mk_command_holder(NULL, NULL, 0, mk_eoc()));
 
   *__ret_cmds = as_array_Cmds(&$1, NULL);
 
@@ -88,17 +93,6 @@ push_back_Cmds(&$1, mk_command_holder(NULL, NULL, 0, mk_eoc()));
   end_main_loop(EXIT_FAILURE);
 
   YYABORT;
-}
-
-
-
-top: {
-  Cmds cs = new_Cmds(1);
-
-  $$ = cs;
-}
-|       cmds {
-  $$ = $1;
 }
 
 
