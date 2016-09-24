@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/types.h>//for cd to work
 #include <signal.h>//for cd to work
 #include "quash.h"
@@ -155,10 +156,21 @@ void run_export(ExportCommand cmd) {
 void run_cd(CDCommand cmd) {
   // TODO: Change directory
   // TODO: Update PWD and optionally update OLD_PWD
-  chdir(cmd.dir);
-  char buf[1024];
-  getcwd(buf, sizeof(buf));
-  write_env("PWD", buf);
+
+   char currentDirectory[1024];
+   getcwd(currentDirectory,sizeof(currentDirectory));
+   write_env("OLD_PWD",currentDirectory);
+
+
+  char resolved_path[4096];
+  realpath(cmd.dir, resolved_path);
+  chdir(resolved_path);
+  write_env("PWD",resolved_path);
+
+  // chdir(cmd.dir);
+  // char buf[1024];
+  // getcwd(buf, sizeof(buf));
+  // write_env("PWD", buf);
 //  for (int i=0; &buf[i] != NULL; ++i)
   //{
 //    //free(buf[i]);
