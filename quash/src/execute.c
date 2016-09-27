@@ -31,7 +31,7 @@
 
 // Return a string containing the current working directory.
 char* get_current_directory(bool* should_free) {
-  // TODO: Get the current working directory. This will fix the prompt path.
+  //Get the current working directory. This will fix the prompt path.
   // HINT: This should be pretty simple
   *should_free = false;
 
@@ -49,21 +49,16 @@ char* get_current_directory(bool* should_free) {
 
 // Returns the value of an environment variable env_var
 const char* lookup_env(const char* env_var) {
-  // TODO: Lookup environment variables. This is required for parser to be able
+  //This is required for parser to be able
   // to interpret variables from the command line and display the prompt
   // correctly
   // HINT: This should be pretty simple
   //IMPLEMENT_ME();
-
-  // TODO: Remove warning silencers
-   // Silence unused variable warning
-
   return getenv(env_var);
 }
 
 // Sets the environment variable env_var to the value val
 void write_env(const char* env_var, const char* val) {
-  // TODO: Write environment variables
   // HINT: This should be pretty simple
   setenv(env_var, val, 1);
 }
@@ -121,6 +116,7 @@ void run_generic(GenericCommand cmd) {
   // array is the executable
   char** str = cmd.args;
   execvp(str[0], str);
+
 }
 
 // Print strings
@@ -141,12 +137,6 @@ void run_export(ExportCommand cmd) {
   // Write an environment variable
   const char* env_var = cmd.env_var;
   const char* val = cmd.val;
-
-  // TODO: Remove warning silencers
-  (void) env_var; // Silence unused variable warning
-  (void) val;     // Silence unused variable warning
-
-  // TODO: Implement export.
   // HINT: This should be quite simple.
   setenv(env_var, val, 1);
   //IMPLEMENT_ME();
@@ -154,13 +144,12 @@ void run_export(ExportCommand cmd) {
 
 // Changes the current working directory
 void run_cd(CDCommand cmd) {
-  // TODO: Change directory
-  // TODO: Update PWD and optionally update OLD_PWD
+  // Change directory
+  // Update PWD and optionally update OLD_PWD
 
-   char currentDirectory[1024];
-   getcwd(currentDirectory,sizeof(currentDirectory));
-   write_env("OLD_PWD",currentDirectory);
-
+  char currentDirectory[1024];
+  getcwd(currentDirectory,sizeof(currentDirectory));
+  write_env("OLD_PWD",currentDirectory);
 
   char resolved_path[4096];
   realpath(cmd.dir, resolved_path);
@@ -171,10 +160,6 @@ void run_cd(CDCommand cmd) {
   // char buf[1024];
   // getcwd(buf, sizeof(buf));
   // write_env("PWD", buf);
-//  for (int i=0; &buf[i] != NULL; ++i)
-  //{
-//    //free(buf[i]);
-//  }
 }
 
 // Sends a signal to all processes contained in a job
@@ -193,7 +178,7 @@ void run_kill(KillCommand cmd) {
 
 // Prints the current working directory to stdout
 void run_pwd() {
-  // TODO: Print the current working directory
+  //Print the current working directory
 //  IMPLEMENT_ME();
   char dir_name[1024];
   if ( getcwd(dir_name, sizeof(dir_name)) !=NULL)
