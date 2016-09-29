@@ -97,13 +97,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>Implements interface functions between Quash and the environment and functions that interpret an execute commands.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="execute_8h_source.html">execute.h</a>&quot;</code><br />
+<code>#include &lt;<a class="el" href="command_8h_source.html">command.h</a>&gt;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;sys/types.h&gt;</code><br />
+<code>#include &lt;signal.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="quash_8h_source.html">quash.h</a>&quot;</code><br />
+<code>#include &lt;dirent.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:aed9cdd9fcf6575f8a352f61c5e13cb5d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aed9cdd9fcf6575f8a352f61c5e13cb5d"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="execute_8c.html#aed9cdd9fcf6575f8a352f61c5e13cb5d">IMPLEMENT_ME</a>()                                                                                                &#160;&#160;&#160;printf(&quot;IMPLEMENT ME: %s(line %d): %s()\n&quot;, __FILE__, __LINE__, __FUNCTION__)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="execute_8c.html#aed9cdd9fcf6575f8a352f61c5e13cb5d">IMPLEMENT_ME</a>()                                                                                                &#160;&#160;&#160;fprintf(stderr, &quot;IMPLEMENT ME: %s(line %d): %s()\n&quot;, __FILE__, __LINE__, __FUNCTION__)</td></tr>
 <tr class="memdesc:aed9cdd9fcf6575f8a352f61c5e13cb5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Note calls to any function that requires implementation. <br /></td></tr>
 <tr class="separator:aed9cdd9fcf6575f8a352f61c5e13cb5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -152,9 +159,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exec
 <tr class="memitem:ae954ca554a8f66899f270560d68ec012"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="execute_8c.html#ae954ca554a8f66899f270560d68ec012">run_jobs</a> ()</td></tr>
 <tr class="memdesc:ae954ca554a8f66899f270560d68ec012"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run the builtin jobs command to show the jobs list.  <a href="#ae954ca554a8f66899f270560d68ec012">More...</a><br /></td></tr>
 <tr class="separator:ae954ca554a8f66899f270560d68ec012"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75b252ab1292f5947f2bcd0454f6378b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="execute_8c.html#a75b252ab1292f5947f2bcd0454f6378b">example_run_command</a> (<a class="el" href="unionCommand.html">Command</a> cmd)</td></tr>
-<tr class="memdesc:a75b252ab1292f5947f2bcd0454f6378b"><td class="mdescLeft">&#160;</td><td class="mdescRight">An example of how to resolve a <a class="el" href="unionCommand.html" title="Make all command types the same size and interchangeable. ">Command</a> type from a <em><a class="el" href="unionCommand.html" title="Make all command types the same size and interchangeable. ">Command</a></em> union.  <a href="#a75b252ab1292f5947f2bcd0454f6378b">More...</a><br /></td></tr>
-<tr class="separator:a75b252ab1292f5947f2bcd0454f6378b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35da8513fef5aa771225177421fb7224"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="execute_8c.html#a35da8513fef5aa771225177421fb7224">example_run_parent_command</a> (<a class="el" href="unionCommand.html">Command</a> cmd)</td></tr>
+<tr class="memdesc:a35da8513fef5aa771225177421fb7224"><td class="mdescLeft">&#160;</td><td class="mdescRight">An example of how to resolve a <a class="el" href="unionCommand.html" title="Make all command types the same size and interchangeable. ">Command</a> type from a <em><a class="el" href="unionCommand.html" title="Make all command types the same size and interchangeable. ">Command</a></em> union.  <a href="#a35da8513fef5aa771225177421fb7224">More...</a><br /></td></tr>
+<tr class="separator:a35da8513fef5aa771225177421fb7224"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8afea4963973ce081011ddc3e7c5cde"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad8afea4963973ce081011ddc3e7c5cde"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>example_run_child_command</b> (<a class="el" href="unionCommand.html">Command</a> cmd)</td></tr>
+<tr class="separator:ad8afea4963973ce081011ddc3e7c5cde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acffe0d67f5dfe68ccf3765cf8ae29dab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="execute_8c.html#acffe0d67f5dfe68ccf3765cf8ae29dab">create_process</a> (<a class="el" href="structCommandHolder.html">CommandHolder</a> holder)</td></tr>
 <tr class="memdesc:acffe0d67f5dfe68ccf3765cf8ae29dab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a process centered around the <em><a class="el" href="unionCommand.html" title="Make all command types the same size and interchangeable. ">Command</a></em> in the <em><a class="el" href="structCommandHolder.html" title="Contains information about the properties of the command. ">CommandHolder</a></em> setting up redirects and pipes where needed.  <a href="#acffe0d67f5dfe68ccf3765cf8ae29dab">More...</a><br /></td></tr>
 <tr class="separator:acffe0d67f5dfe68ccf3765cf8ae29dab"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,12 +202,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exec
 
 </div>
 </div>
-<a class="anchor" id="a75b252ab1292f5947f2bcd0454f6378b"></a>
+<a class="anchor" id="a35da8513fef5aa771225177421fb7224"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void example_run_command </td>
+          <td class="memname">void example_run_parent_command </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="unionCommand.html">Command</a>&#160;</td>
           <td class="paramname"><em>cmd</em></td><td>)</td>

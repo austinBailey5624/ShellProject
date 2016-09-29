@@ -6,12 +6,19 @@ Implements interface functions between Quash and the environment and functions t
 
 
 {\ttfamily \#include \char`\"{}execute.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$command.\+h$>$}\\*
 {\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+{\ttfamily \#include $<$signal.\+h$>$}\\*
 {\ttfamily \#include \char`\"{}quash.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
 \subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
-\#define \hyperlink{execute_8c_aed9cdd9fcf6575f8a352f61c5e13cb5d}{I\+M\+P\+L\+E\+M\+E\+N\+T\+\_\+\+ME}()                                                                                                ~printf(\char`\"{}I\+M\+P\+L\+E\+M\+E\+NT M\+E\+: \%s(line \%d)\+: \%s()\textbackslash{}n\char`\"{}, \+\_\+\+\_\+\+F\+I\+L\+E\+\_\+\+\_\+, \+\_\+\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+, \+\_\+\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+\_\+)\hypertarget{execute_8c_aed9cdd9fcf6575f8a352f61c5e13cb5d}{}\label{execute_8c_aed9cdd9fcf6575f8a352f61c5e13cb5d}
+\#define \hyperlink{execute_8c_aed9cdd9fcf6575f8a352f61c5e13cb5d}{I\+M\+P\+L\+E\+M\+E\+N\+T\+\_\+\+ME}()                                                                                                ~fprintf(stderr, \char`\"{}I\+M\+P\+L\+E\+M\+E\+NT M\+E\+: \%s(line \%d)\+: \%s()\textbackslash{}n\char`\"{}, \+\_\+\+\_\+\+F\+I\+L\+E\+\_\+\+\_\+, \+\_\+\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+, \+\_\+\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+\_\+)\hypertarget{execute_8c_aed9cdd9fcf6575f8a352f61c5e13cb5d}{}\label{execute_8c_aed9cdd9fcf6575f8a352f61c5e13cb5d}
 
 \begin{DoxyCompactList}\small\item\em Note calls to any function that requires implementation. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Functions}
@@ -46,8 +53,11 @@ void \hyperlink{execute_8c_a934397f142ab2b63f69628a9db231bac}{run\+\_\+pwd} ()
 \begin{DoxyCompactList}\small\item\em Run the builtin pwd (print working directory) command. \end{DoxyCompactList}\item 
 void \hyperlink{execute_8c_ae954ca554a8f66899f270560d68ec012}{run\+\_\+jobs} ()
 \begin{DoxyCompactList}\small\item\em Run the builtin jobs command to show the jobs list. \end{DoxyCompactList}\item 
-void \hyperlink{execute_8c_a75b252ab1292f5947f2bcd0454f6378b}{example\+\_\+run\+\_\+command} (\hyperlink{unionCommand}{Command} cmd)
+void \hyperlink{execute_8c_a35da8513fef5aa771225177421fb7224}{example\+\_\+run\+\_\+parent\+\_\+command} (\hyperlink{unionCommand}{Command} cmd)
 \begin{DoxyCompactList}\small\item\em An example of how to resolve a \hyperlink{unionCommand}{Command} type from a {\itshape \hyperlink{unionCommand}{Command}} union. \end{DoxyCompactList}\item 
+void {\bfseries example\+\_\+run\+\_\+child\+\_\+command} (\hyperlink{unionCommand}{Command} cmd)\hypertarget{execute_8c_ad8afea4963973ce081011ddc3e7c5cde}{}\label{execute_8c_ad8afea4963973ce081011ddc3e7c5cde}
+
+\item 
 void \hyperlink{execute_8c_acffe0d67f5dfe68ccf3765cf8ae29dab}{create\+\_\+process} (\hyperlink{structCommandHolder}{Command\+Holder} holder)
 \begin{DoxyCompactList}\small\item\em Create a process centered around the {\itshape \hyperlink{unionCommand}{Command}} in the {\itshape \hyperlink{structCommandHolder}{Command\+Holder}} setting up redirects and pipes where needed. \end{DoxyCompactList}\item 
 void \hyperlink{execute_8c_a4dab67459028f3b5a60d1a3695933f4b}{run\+\_\+script} (\hyperlink{structCommandHolder}{Command\+Holder} $\ast$holders)
@@ -85,13 +95,13 @@ Not all commands should be run in the child process. A few need to change the qu
 \begin{DoxySeeAlso}{See also}
 \hyperlink{unionCommand}{Command} \hyperlink{structCommandHolder}{Command\+Holder} 
 \end{DoxySeeAlso}
-\index{execute.\+c@{execute.\+c}!example\+\_\+run\+\_\+command@{example\+\_\+run\+\_\+command}}
-\index{example\+\_\+run\+\_\+command@{example\+\_\+run\+\_\+command}!execute.\+c@{execute.\+c}}
-\subsubsection[{\texorpdfstring{example\+\_\+run\+\_\+command(\+Command cmd)}{example\_run\_command(Command cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void example\+\_\+run\+\_\+command (
+\index{execute.\+c@{execute.\+c}!example\+\_\+run\+\_\+parent\+\_\+command@{example\+\_\+run\+\_\+parent\+\_\+command}}
+\index{example\+\_\+run\+\_\+parent\+\_\+command@{example\+\_\+run\+\_\+parent\+\_\+command}!execute.\+c@{execute.\+c}}
+\subsubsection[{\texorpdfstring{example\+\_\+run\+\_\+parent\+\_\+command(\+Command cmd)}{example\_run\_parent\_command(Command cmd)}}]{\setlength{\rightskip}{0pt plus 5cm}void example\+\_\+run\+\_\+parent\+\_\+command (
 \begin{DoxyParamCaption}
 \item[{{\bf Command}}]{cmd}
 \end{DoxyParamCaption}
-)}\hypertarget{execute_8c_a75b252ab1292f5947f2bcd0454f6378b}{}\label{execute_8c_a75b252ab1292f5947f2bcd0454f6378b}
+)}\hypertarget{execute_8c_a35da8513fef5aa771225177421fb7224}{}\label{execute_8c_a35da8513fef5aa771225177421fb7224}
 
 
 An example of how to resolve a \hyperlink{unionCommand}{Command} type from a {\itshape \hyperlink{unionCommand}{Command}} union. 
